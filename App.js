@@ -1,11 +1,14 @@
-import { StatusBar } from 'expo-status-bar';
+import { useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
+import SignIn from './components/SignIn';
+
 export default function App() {
+const [user, setUser] = useState(false);
+
   return (
     <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
+      {user ? (<Text style={styles.text}>Hola</Text>) : <SignIn/>}
     </View>
   );
 }
@@ -17,4 +20,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+
+  text: {
+    color: 'red'
+  }
 });
