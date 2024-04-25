@@ -41,7 +41,7 @@ const styles = StyleSheet.create({
     padding: 25,
     borderRadius: 35,
     width: "75%",
-    height: "40%",
+    height: "50%",
     alignItems: "center",
     borderWidth: 5, // Add border width
     borderColor: "#c6ebc5", // Set border color
