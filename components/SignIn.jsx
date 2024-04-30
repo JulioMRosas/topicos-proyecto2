@@ -5,13 +5,12 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { useState } from "react";
 
-const SignIn = () => {
-  const [message, setMessage] = useState(false);
+const SignIn = (props) => {
+  const { user, setUser } = props;
 
   const signIn = () => {
-    setMessage(true);
+    setUser(true);
   };
 
   return (
@@ -22,7 +21,6 @@ const SignIn = () => {
         <TouchableOpacity style={styles.signInButton} onPress={signIn}>
           <Text style={styles.signInButtonText}>Iniciar sesión con Google</Text>
         </TouchableOpacity>
-        {message && <Text>tas logeado</Text>}
       </View>
     </SafeAreaView>
   );
@@ -52,7 +50,6 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginBottom: 5,
     padding: 20,
-    fontFamily: "Quicksand-Regular",
   },
 
   container: {

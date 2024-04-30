@@ -1,17 +1,21 @@
 import { useState } from "react";
 import {
   SafeAreaView,
-  SafeAreaViewComponent,
   StyleSheet,
   Text,
   View,
   Image,
+  TouchableOpacity
 } from "react-native";
 import SignIn from "./components/SignIn";
-import { Entypo, Ionicons, AntDesign } from "@expo/vector-icons";
+import { Entypo, Ionicons, AntDesign, SimpleLineIcons } from "@expo/vector-icons";
 
 export default function App() {
-  const [user, setUser] = useState(true);
+  const [user, setUser] = useState(false);
+
+  const signOut = () => {
+    setUser(false);
+  }
 
   return (
     <>
@@ -47,13 +51,18 @@ export default function App() {
                 color="black"
               />
             </View>
+            <TouchableOpacity>
+              <View>
+                <SimpleLineIcons name="logout" size={24} color="black" onPress={signOut}/>
+              </View>
+            </TouchableOpacity>
             <View style={styles.Botonagregar}>
               <AntDesign name="pluscircleo" size={35} color="black" />
             </View>
           </View>
         </SafeAreaView>
       ) : (
-        <SignIn />
+        <SignIn user={user} setUser={setUser}/>
       )}
     </>
   );
