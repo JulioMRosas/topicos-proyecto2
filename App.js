@@ -5,17 +5,24 @@ import {
   Text,
   View,
   Image,
-  TouchableOpacity
+  TouchableOpacity,
+  ScrollView,
+  StatusBar,
 } from "react-native";
 import SignIn from "./components/SignIn";
-import { Entypo, Ionicons, AntDesign, SimpleLineIcons } from "@expo/vector-icons";
+import {
+  Entypo,
+  Ionicons,
+  AntDesign,
+  SimpleLineIcons,
+} from "@expo/vector-icons";
 
 export default function App() {
   const [user, setUser] = useState(false);
 
   const signOut = () => {
     setUser(false);
-  }
+  };
 
   return (
     <>
@@ -28,21 +35,50 @@ export default function App() {
             />
             <Text>Remembership</Text>
           </View>
-          <View style={styles.rectangulo}>
-            <View style={styles.Boton}>
-              <Entypo name="dots-three-horizontal" size={24} color="black" />
+          <ScrollView style={styles.scrollView}>
+          <View style={styles.menugeneral}>
+            <View style={styles.rectangulo}>
+              <View style={styles.Boton}>
+                <Entypo name="dots-three-horizontal" size={24} color="black" />
+              </View>
+            </View>
+            <View style={styles.rectangulo}>
+              <View style={styles.Boton}>
+                <Entypo name="dots-three-horizontal" size={24} color="black" />
+              </View>
+            </View>
+            <View style={styles.rectangulo}>
+              <View style={styles.Boton}>
+                <Entypo name="dots-three-horizontal" size={24} color="black" />
+              </View>
+            </View>
+            <View style={styles.rectangulo}>
+              <View style={styles.Boton}>
+                <Entypo name="dots-three-horizontal" size={24} color="black" />
+              </View>
+            </View>
+            <View style={styles.rectangulo}>
+              <View style={styles.Boton}>
+                <Entypo name="dots-three-horizontal" size={24} color="black" />
+              </View>
+            </View>
+            <View style={styles.rectangulo}>
+              <View style={styles.Boton}>
+                <Entypo name="dots-three-horizontal" size={24} color="black" />
+              </View>
+            </View>
+            <View style={styles.rectangulo}>
+              <View style={styles.Boton}>
+                <Entypo name="dots-three-horizontal" size={24} color="black" />
+              </View>
+            </View>
+            <View style={styles.rectangulo}>
+              <View style={styles.Boton}>
+                <Entypo name="dots-three-horizontal" size={24} color="black" />
+              </View>
             </View>
           </View>
-          <View style={styles.rectangulo}>
-            <View style={styles.Boton}>
-              <Entypo name="dots-three-horizontal" size={24} color="black" />
-            </View>
-          </View>
-          <View style={styles.rectangulo}>
-            <View style={styles.Boton}>
-              <Entypo name="dots-three-horizontal" size={24} color="black" />
-            </View>
-          </View>
+          </ScrollView>
           <View style={styles.footer}>
             <View style={styles.Botonchat}>
               <Ionicons
@@ -53,7 +89,12 @@ export default function App() {
             </View>
             <TouchableOpacity>
               <View>
-                <SimpleLineIcons name="logout" size={24} color="black" onPress={signOut}/>
+                <SimpleLineIcons
+                  name="logout"
+                  size={24}
+                  color="black"
+                  onPress={signOut}
+                />
               </View>
             </TouchableOpacity>
             <View style={styles.Botonagregar}>
@@ -62,7 +103,7 @@ export default function App() {
           </View>
         </SafeAreaView>
       ) : (
-        <SignIn user={user} setUser={setUser}/>
+        <SignIn user={user} setUser={setUser} />
       )}
     </>
   );
@@ -72,11 +113,24 @@ const styles = StyleSheet.create({
   container: {
     height: "100%",
     width: "100%",
-    flex: 1, // Set the container to flex 1 to occupy the full screen
+    display: "flex",
     backgroundColor: "#fa7070",
     alignItems: "center",
     justifyContent: "center",
     flexDirection: "column",
+  },
+
+  scrollView: {
+    marginTop: 9,
+    height: "80%",
+    width: "100%" // Asegúrate de que el ScrollView use el espacio disponible
+  },
+
+  menugeneral: {
+    height: "80%",
+    width: "100%",
+    alignItems: "center",
+    justifyContent: "flex-start",
   },
 
   logo: {
@@ -84,16 +138,16 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
-    marginBottom: 8,
+    height: "10%",
+    width: "100%",
   },
 
   rectangulo: {
     width: "90%",
-    height: "20%",
+    height: 100,
     marginBottom: 8,
     borderRadius: 25,
     backgroundColor: "#fefded",
-
     alignItems: "flex-end",
     justifyContent: "center",
     display: "flex",
@@ -121,9 +175,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    marginTop: 139,
     backgroundColor: "#c6ebc5",
-    //minHeight: 200,
     height: "10%",
     width: "100%",
   },
@@ -135,5 +187,4 @@ const styles = StyleSheet.create({
   Botonchat: {
     marginLeft: 10,
   },
-  
 });
