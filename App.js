@@ -7,7 +7,7 @@ import {
   Image,
   TouchableOpacity,
   ScrollView,
-  StatusBar,
+  ImageBackground,
 } from "react-native";
 import SignIn from "./components/SignIn";
 import {
@@ -28,12 +28,21 @@ export default function App() {
     <>
       {user ? (
         <SafeAreaView style={styles.container}>
+          <ImageBackground 
+            source={require("./assets/Sandiafondo.png")}
+            style={styles.tinyFondo}
+          >
+          </ImageBackground >
           <View style={styles.logo}>
             <Image
               style={styles.tinyLogo}
               source={require("./assets/LogoRemembership.png")}
             />
-            <Text>Remembership</Text>
+            <Text style={styles.titulo}>Remembership</Text>
+            <Image
+              style={styles.tinyLogo}
+              source={require("./assets/LogoRemembership.png")}
+            />
           </View>
           <ScrollView style={styles.scrollView}>
           <View style={styles.menugeneral}>
@@ -114,7 +123,7 @@ const styles = StyleSheet.create({
     height: "100%",
     width: "100%",
     display: "flex",
-    backgroundColor: "#fa7070",
+    ImageBackground,
     alignItems: "center",
     justifyContent: "center",
     flexDirection: "column",
@@ -142,6 +151,12 @@ const styles = StyleSheet.create({
     width: "100%",
   },
 
+  titulo: {
+    fontSize: 24, // Cambia este valor para ajustar el tamaño del texto
+    color: '#FFFFFF', // Puedes usar cualquier código de color hexadecimal aquí
+    fontWeight: 'bold',
+  },
+
   rectangulo: {
     width: "90%",
     height: 100,
@@ -154,9 +169,14 @@ const styles = StyleSheet.create({
   },
 
   tinyLogo: {
-    width: 50,
-    height: 50,
+    width: 70,
+    height: 70,
     borderRadius: 100,
+  },
+
+  tinyFondo: {
+    flex: 1,
+    width: '100%'
   },
 
   Boton: {
@@ -175,7 +195,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    backgroundColor: "#c6ebc5",
+    backgroundColor: "#8dd68c",
     height: "10%",
     width: "100%",
   },
