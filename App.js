@@ -3,6 +3,7 @@ import {
   SafeAreaView,
   StyleSheet,
   Text,
+  TextInput,
   View,
   Image,
   TouchableOpacity,
@@ -19,19 +20,53 @@ import {
 
 export default function App() {
   const [user, setUser] = useState(false);
+  const [chat, setChat] = useState(false);
+  const [chatText, setChatText] = useState("Escribe aqui lo que necesitas");
 
   const signOut = () => {
     setUser(false);
   };
 
+  const useChat = () => {
+    setChat(true);
+  }
+
+  const closeChat = () => {
+    setChat(false);
+  }
+
   return (
     <>
-      {user ? (
+      { user && chat ? (
+        /* Chat de ayuda */
+        <SafeAreaView style={styles.chatContainer}>
+          <View style={styles.chatHeader}>
+            <Text>Chat de ayuda</Text>
+            <TouchableOpacity style={styles.chatRegresar}>
+              <AntDesign name="back" size={24} color="black" onPress={closeChat}/>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.chatMainArea}>
+            <Text>conversacion</Text>
+          </View>
+          <View style={styles.chatTypingArea}>
+            <TextInput
+              style={styles.chatInput}
+              value={chatText} 
+            />
+            <TouchableOpacity style={styles.chatSendMessage}>
+              <Ionicons name="send-outline" size={24} color="black" />
+            </TouchableOpacity>
+          </View>
+        </SafeAreaView>
+      ) : user ? (
+        /* Membresias */
         <SafeAreaView style={styles.container}>
           <ImageBackground 
             source={require("./assets/Sandiafondo.png")}
             style={styles.tinyFondo}
           >
+            {/* Header */}
             <View style={styles.logo}>
               <Image
                 style={styles.tinyLogo}
@@ -47,18 +82,19 @@ export default function App() {
             <View style={styles.menugeneral}>
 
               {/* Aqui trabaja tavo */}
-              
+
             </View>
             </ScrollView>
-          </ImageBackground >
-          
+          </ImageBackground >   
 
+          {/* Footer */}
           <View style={styles.footer}>
             <View style={styles.Botonchat}>
               <Ionicons
                 name="chatbubble-ellipses-outline"
                 size={35}
                 color="black"
+                onPress={useChat}
               />
             </View>
             <TouchableOpacity>
@@ -172,4 +208,56 @@ const styles = StyleSheet.create({
   Botonchat: {
     marginLeft: 10,
   },
+
+  chatContainer: {
+    height: "100%",
+    width: "100%",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "red"
+  },
+  
+  chatHeader: {
+    height: "10%",
+    width: "100%",
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-evenly",
+    alignItems: "center",
+    backgroundColor: "blue",
+  },
+  
+  chatMainArea: {
+    height: "80%",
+    width: "100%",
+    display: "flex",
+    backgroundColor: "green",
+    justifyContent: "center",
+    alignItems: "center"
+  },
+
+  chatTypingArea: {
+    height: "10%",
+    width: "100%",
+    display: "flex",
+    flexDirection: "row",
+    backgroundColor: "yellow",
+    justifyContent: "center",
+    alignItems: "center",
+    paddingHorizontal: 10
+  },
+
+  chatInput: {
+    height: "100%",
+    width: "90%"
+  },
+
+  chatSendMessage: {
+    height: "100%",
+    width: "10%",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center"
+  }
 });
