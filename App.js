@@ -32,62 +32,64 @@ export default function App() {
             source={require("./assets/Sandiafondo.png")}
             style={styles.tinyFondo}
           >
+            <View style={styles.logo}>
+              <Image
+                style={styles.tinyLogo}
+                source={require("./assets/LogoRemembership.png")}
+              />
+              <Text style={styles.titulo}>Remembership</Text>
+              <Image
+                style={styles.tinyLogo}
+                source={require("./assets/LogoRemembership.png")}
+              />
+            </View>
+            <ScrollView style={styles.scrollView}>
+            <View style={styles.menugeneral}>
+              <View style={styles.rectangulo}>
+                <View style={styles.Boton}>
+                  <Entypo name="dots-three-horizontal" size={24} color="black" />
+                </View>
+              </View>
+              <View style={styles.rectangulo}>
+                <View style={styles.Boton}>
+                  <Entypo name="dots-three-horizontal" size={24} color="black" />
+                </View>
+              </View>
+              <View style={styles.rectangulo}>
+                <View style={styles.Boton}>
+                  <Entypo name="dots-three-horizontal" size={24} color="black" />
+                </View>
+              </View>
+              <View style={styles.rectangulo}>
+                <View style={styles.Boton}>
+                  <Entypo name="dots-three-horizontal" size={24} color="black" />
+                </View>
+              </View>
+              <View style={styles.rectangulo}>
+                <View style={styles.Boton}>
+                  <Entypo name="dots-three-horizontal" size={24} color="black" />
+                </View>
+              </View>
+              <View style={styles.rectangulo}>
+                <View style={styles.Boton}>
+                  <Entypo name="dots-three-horizontal" size={24} color="black" />
+                </View>
+              </View>
+              <View style={styles.rectangulo}>
+                <View style={styles.Boton}>
+                  <Entypo name="dots-three-horizontal" size={24} color="black" />
+                </View>
+              </View>
+              <View style={styles.rectangulo}>
+                <View style={styles.Boton}>
+                  <Entypo name="dots-three-horizontal" size={24} color="black" />
+                </View>
+              </View>
+            </View>
+            </ScrollView>
           </ImageBackground >
-          <View style={styles.logo}>
-            <Image
-              style={styles.tinyLogo}
-              source={require("./assets/LogoRemembership.png")}
-            />
-            <Text style={styles.titulo}>Remembership</Text>
-            <Image
-              style={styles.tinyLogo}
-              source={require("./assets/LogoRemembership.png")}
-            />
-          </View>
-          <ScrollView style={styles.scrollView}>
-          <View style={styles.menugeneral}>
-            <View style={styles.rectangulo}>
-              <View style={styles.Boton}>
-                <Entypo name="dots-three-horizontal" size={24} color="black" />
-              </View>
-            </View>
-            <View style={styles.rectangulo}>
-              <View style={styles.Boton}>
-                <Entypo name="dots-three-horizontal" size={24} color="black" />
-              </View>
-            </View>
-            <View style={styles.rectangulo}>
-              <View style={styles.Boton}>
-                <Entypo name="dots-three-horizontal" size={24} color="black" />
-              </View>
-            </View>
-            <View style={styles.rectangulo}>
-              <View style={styles.Boton}>
-                <Entypo name="dots-three-horizontal" size={24} color="black" />
-              </View>
-            </View>
-            <View style={styles.rectangulo}>
-              <View style={styles.Boton}>
-                <Entypo name="dots-three-horizontal" size={24} color="black" />
-              </View>
-            </View>
-            <View style={styles.rectangulo}>
-              <View style={styles.Boton}>
-                <Entypo name="dots-three-horizontal" size={24} color="black" />
-              </View>
-            </View>
-            <View style={styles.rectangulo}>
-              <View style={styles.Boton}>
-                <Entypo name="dots-three-horizontal" size={24} color="black" />
-              </View>
-            </View>
-            <View style={styles.rectangulo}>
-              <View style={styles.Boton}>
-                <Entypo name="dots-three-horizontal" size={24} color="black" />
-              </View>
-            </View>
-          </View>
-          </ScrollView>
+          
+
           <View style={styles.footer}>
             <View style={styles.Botonchat}>
               <Ionicons
@@ -176,7 +178,7 @@ const styles = StyleSheet.create({
 
   tinyFondo: {
     flex: 1,
-    width: '100%'
+    width: "100%",
   },
 
   Boton: {

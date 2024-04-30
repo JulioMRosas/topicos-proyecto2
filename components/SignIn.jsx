@@ -3,17 +3,19 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet, Modal } from 'reac
 import { app } from '../utils/firebase';
 import { getAuth,signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth';
 
-export default function Home() {
+export default function Home(props) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const { user, setUser } = props;
 
   const signInWithEmail = async () => {
     try {
       const auth = getAuth();
       await signInWithEmailAndPassword(auth, email, password);
       // Aquí puedes navegar a otra pantalla o realizar alguna acción adicional
+      setUser(true);
     } catch (error) {
       setError(error.message);
     }
@@ -115,7 +117,6 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginBottom: 5,
     padding: 20,
-    fontFamily: "Quicksand-Regular",
   },
   container: {
     flex: 1,
