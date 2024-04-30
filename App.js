@@ -45,46 +45,9 @@ export default function App() {
             </View>
             <ScrollView style={styles.scrollView}>
             <View style={styles.menugeneral}>
-              <View style={styles.rectangulo}>
-                <View style={styles.Boton}>
-                  <Entypo name="dots-three-horizontal" size={24} color="black" />
-                </View>
-              </View>
-              <View style={styles.rectangulo}>
-                <View style={styles.Boton}>
-                  <Entypo name="dots-three-horizontal" size={24} color="black" />
-                </View>
-              </View>
-              <View style={styles.rectangulo}>
-                <View style={styles.Boton}>
-                  <Entypo name="dots-three-horizontal" size={24} color="black" />
-                </View>
-              </View>
-              <View style={styles.rectangulo}>
-                <View style={styles.Boton}>
-                  <Entypo name="dots-three-horizontal" size={24} color="black" />
-                </View>
-              </View>
-              <View style={styles.rectangulo}>
-                <View style={styles.Boton}>
-                  <Entypo name="dots-three-horizontal" size={24} color="black" />
-                </View>
-              </View>
-              <View style={styles.rectangulo}>
-                <View style={styles.Boton}>
-                  <Entypo name="dots-three-horizontal" size={24} color="black" />
-                </View>
-              </View>
-              <View style={styles.rectangulo}>
-                <View style={styles.Boton}>
-                  <Entypo name="dots-three-horizontal" size={24} color="black" />
-                </View>
-              </View>
-              <View style={styles.rectangulo}>
-                <View style={styles.Boton}>
-                  <Entypo name="dots-three-horizontal" size={24} color="black" />
-                </View>
-              </View>
+
+              {/* Aqui trabaja tavo */}
+              
             </View>
             </ScrollView>
           </ImageBackground >
