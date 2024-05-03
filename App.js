@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import {
   SafeAreaView,
   StyleSheet,
@@ -19,7 +19,12 @@ import {
 } from "@expo/vector-icons";
 
 export default function App() {
-  const [user, setUser] = useState(false);
+  const [user, setUser] = useState(true);
+  const [task, setTask] = useState([]);
+  const [newTask, setNewTask] = useState("");
+  const [editedTaskText, setEditedTaskText] = useState("");
+  const [isEditing, setIsEditing] = useState(false);
+  const [editIndex, setEditIndex] = useState(null);
   const [chat, setChat] = useState(false);
   const [chatText, setChatText] = useState("Escribe aqui lo que necesitas");
 
@@ -27,23 +32,57 @@ export default function App() {
     setUser(false);
   };
 
+  const addTask = (newTask) => {
+    setTask([...task, newTask]);
+  };
+
+  const editTask = (index) => {
+    setEditedTaskText(task[index]);
+    setIsEditing(true);
+    setEditIndex(index);
+  };
+
+  const deleteTask = (index) => {
+    const updatedTask = [...task];
+    updatedTask.splice(index, 1);
+    setTask(updatedTask);
+  };
+
+  const handleAddTask = () => {
+    if (newTask.trim() !== "") {
+      addTask(newTask);
+      setNewTask("");
+    }
+  };
+
+  const saveEditedTask = () => {
+    if (editedTaskText.trim() !== "") {
+      const updatedTask = [...task];
+      updatedTask[editIndex] = editedTaskText;
+      setTask(updatedTask);
+      setIsEditing(false);
+      setEditedTaskText("");
+      setEditIndex(null);
+    }
+  };
+
   const useChat = () => {
     setChat(true);
-  }
+  };
 
   const closeChat = () => {
     setChat(false);
-  }
+  };
 
   return (
     <>
-      { user && chat ? (
+      {user && chat ? (
         /* Chat de ayuda */
         <SafeAreaView style={styles.chatContainer}>
           <View style={styles.chatHeader}>
             <Text>Chat de ayuda</Text>
-            <TouchableOpacity style={styles.chatRegresar}>
-              <AntDesign name="back" size={24} color="black" onPress={closeChat}/>
+            <TouchableOpacity style={styles.chatRegresar} onPress={closeChat}>
+              <AntDesign name="back" size={24} color="black" />
             </TouchableOpacity>
           </View>
           <View style={styles.chatMainArea}>
@@ -52,7 +91,8 @@ export default function App() {
           <View style={styles.chatTypingArea}>
             <TextInput
               style={styles.chatInput}
-              value={chatText} 
+              value={chatText}
+              onChangeText={(text) => setChatText(text)}
             />
             <TouchableOpacity style={styles.chatSendMessage}>
               <Ionicons name="send-outline" size={24} color="black" />
@@ -62,7 +102,7 @@ export default function App() {
       ) : user ? (
         /* Membresias */
         <SafeAreaView style={styles.container}>
-          <ImageBackground 
+          <ImageBackground
             source={require("./assets/Sandiafondo.png")}
             style={styles.tinyFondo}
           >
@@ -79,13 +119,37 @@ export default function App() {
               />
             </View>
             <ScrollView style={styles.scrollView}>
-            <View style={styles.menugeneral}>
-
-              {/* Aqui trabaja tavo */}
-
-            </View>
+              <View style={styles.menugeneral}>
+                <TextInput
+                  style={styles.input}
+                  placeholder="Nueva tarea"
+                  value={newTask}
+                  onChangeText={(text) => setNewTask(text)}
+                />
+                <TextInput
+                  style={styles.input}
+                  placeholder="Nuevo texto de la tarea"
+                  value={editedTaskText}
+                  onChangeText={(text) => setEditedTaskText(text)}
+                />
+                <TouchableOpacity onPress={saveEditedTask}>
+                  <Text>Guardar cambios</Text>
+                </TouchableOpacity>
+                <View style={styles.menugeneral}>
+                  {task.map((task, index) => (
+                    <TouchableOpacity key={index} onPress={() => editTask(index)}>
+                      <View style={styles.rectangulo}>
+                        <Text>{task}</Text>
+                        <TouchableOpacity onPress={() => deleteTask(index)}>
+                          <Entypo name="cross" size={24} color="black" />
+                        </TouchableOpacity>
+                      </View>
+                    </TouchableOpacity>
+                  ))}
+                </View>
+              </View>
             </ScrollView>
-          </ImageBackground >   
+          </ImageBackground>
 
           {/* Footer */}
           <View style={styles.footer}>
@@ -107,9 +171,12 @@ export default function App() {
                 />
               </View>
             </TouchableOpacity>
+            <TouchableOpacity onPress={handleAddTask}>
             <View style={styles.Botonagregar}>
               <AntDesign name="pluscircleo" size={35} color="black" />
             </View>
+            </TouchableOpacity>
+            
           </View>
         </SafeAreaView>
       ) : (
@@ -124,7 +191,6 @@ const styles = StyleSheet.create({
     height: "100%",
     width: "100%",
     display: "flex",
-    ImageBackground,
     alignItems: "center",
     justifyContent: "center",
     flexDirection: "column",
@@ -133,7 +199,7 @@ const styles = StyleSheet.create({
   scrollView: {
     marginTop: 9,
     height: "80%",
-    width: "100%" // Asegúrate de que el ScrollView use el espacio disponible
+    width: "100%", // Asegúrate de que el ScrollView use el espacio disponible
   },
 
   menugeneral: {
@@ -154,8 +220,8 @@ const styles = StyleSheet.create({
 
   titulo: {
     fontSize: 24, // Cambia este valor para ajustar el tamaño del texto
-    color: '#FFFFFF', // Puedes usar cualquier código de color hexadecimal aquí
-    fontWeight: 'bold',
+    color: "#FFFFFF", // Puedes usar cualquier código de color hexadecimal aquí
+    fontWeight: "bold",
   },
 
   rectangulo: {
@@ -215,9 +281,9 @@ const styles = StyleSheet.create({
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "red"
+    backgroundColor: "red",
   },
-  
+
   chatHeader: {
     height: "10%",
     width: "100%",
@@ -227,14 +293,14 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "blue",
   },
-  
+
   chatMainArea: {
     height: "80%",
     width: "100%",
     display: "flex",
     backgroundColor: "green",
     justifyContent: "center",
-    alignItems: "center"
+    alignItems: "center",
   },
 
   chatTypingArea: {
@@ -245,12 +311,12 @@ const styles = StyleSheet.create({
     backgroundColor: "yellow",
     justifyContent: "center",
     alignItems: "center",
-    paddingHorizontal: 10
+    paddingHorizontal: 10,
   },
 
   chatInput: {
     height: "100%",
-    width: "90%"
+    width: "90%",
   },
 
   chatSendMessage: {
@@ -258,6 +324,6 @@ const styles = StyleSheet.create({
     width: "10%",
     display: "flex",
     justifyContent: "center",
-    alignItems: "center"
-  }
+    alignItems: "center",
+  },
 });
