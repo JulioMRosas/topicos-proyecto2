@@ -8,7 +8,7 @@ import {
   Image,
   TouchableOpacity,
   ScrollView,
-  ImageBackground,
+  ImageBackground, Modal
 } from "react-native";
 import SignIn from "./components/SignIn";
 import {
@@ -19,51 +19,72 @@ import {
 } from "@expo/vector-icons";
 
 export default function App() {
-  const [user, setUser] = useState(true);
+  const [user, setUser] = useState(false);
+  //membresias...
   const [task, setTask] = useState([]);
   const [newTask, setNewTask] = useState("");
   const [editedTaskText, setEditedTaskText] = useState("");
   const [isEditing, setIsEditing] = useState(false);
   const [editIndex, setEditIndex] = useState(null);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+  
   const [chat, setChat] = useState(false);
   const [chatText, setChatText] = useState("Escribe aqui lo que necesitas");
-
   const signOut = () => {
     setUser(false);
   };
 
+  //actualizar la lista existente de membresias con una nueva
   const addTask = (newTask) => {
     setTask([...task, newTask]);
   };
-
-  const editTask = (index) => {
-    setEditedTaskText(task[index]);
-    setIsEditing(true);
-    setEditIndex(index);
+  const toggleModal = () => {
+    setIsModalVisible(!isModalVisible);
   };
+  //editar
+  //editar
+const editTask = (index) => {
+  setEditedTaskText(task[index]);
+  setIsEditing(true); // Asegurar que isEditing se establezca en true al editar una tarea existente
+  setEditIndex(index);
+  setIsModalVisible(true); // Abre el modal al editar una membresía existente
+};
 
+  
+  //eliminar
   const deleteTask = (index) => {
     const updatedTask = [...task];
     updatedTask.splice(index, 1);
     setTask(updatedTask);
   };
 
+  //funcion de agregar la nueva membresia a la lista
   const handleAddTask = () => {
-    if (newTask.trim() !== "") {
-      addTask(newTask);
-      setNewTask("");
-    }
+  
+      if (newTask.trim() !== "") {
+        addTask(newTask);
+        setNewTask("");
+        setIsModalVisible(false); // Cierra el modal después de agregar nueva membresia exitosamente
+      }
+    
   };
 
+
+  //guardar nuevos datos despues de editar membresia existente
   const saveEditedTask = () => {
-    if (editedTaskText.trim() !== "") {
-      const updatedTask = [...task];
-      updatedTask[editIndex] = editedTaskText;
-      setTask(updatedTask);
-      setIsEditing(false);
-      setEditedTaskText("");
-      setEditIndex(null);
-    }
+      if (editedTaskText.trim() !== "") {
+        const updatedTask = [...task];
+        updatedTask[editIndex] = editedTaskText;
+        setTask(updatedTask);
+        setIsEditing(false);
+        setEditedTaskText("");
+        setEditIndex(null);
+        if (!isEditing) {
+          setShowSuccessMessage(true); // Mostrar el mensaje de éxito en el modal
+        }
+      }
+    
   };
 
   const useChat = () => {
@@ -118,26 +139,55 @@ export default function App() {
                 source={require("./assets/LogoRemembership.png")}
               />
             </View>
-            <ScrollView style={styles.scrollView}>
-              <View style={styles.menugeneral}>
-                <TextInput
+               {/*Aquí trabaja tavo*/}
+
+
+
+
+               <Modal visible={isModalVisible} animationType="slide">
+        <View style={styles.modalContainer}>
+          <Text style={styles.modalTitle}>Crea una nueva membresia</Text>
+          <TextInput
                   style={styles.input}
-                  placeholder="Nueva tarea"
+                  placeholder="Presiona para crear una nueva membresia"
                   value={newTask}
                   onChangeText={(text) => setNewTask(text)}
                 />
                 <TextInput
                   style={styles.input}
-                  placeholder="Nuevo texto de la tarea"
+                  placeholder="Presiona para editar membreasia"
                   value={editedTaskText}
                   onChangeText={(text) => setEditedTaskText(text)}
                 />
-                <TouchableOpacity onPress={saveEditedTask}>
+      
+          <TouchableOpacity style={styles.AddButton} onPress={handleAddTask}>
+            <Text style={styles.registerButtonText}>Agregar</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={saveEditedTask}>
                   <Text>Guardar cambios</Text>
                 </TouchableOpacity>
+          <TouchableOpacity style={styles.closeButton} onPress={toggleModal}>
+            <Text style={styles.closeButtonText}>Cerrar</Text>
+          </TouchableOpacity>
+          {showSuccessMessage && (
+    <Text style={styles.menugeneral}>Guardado Con Éxito!!!!</Text>
+  )}
+        </View>
+      </Modal>
+
+
+
+      
+            <ScrollView style={styles.scrollView}>
+              <View style={styles.menugeneral}>
+                
+                
                 <View style={styles.menugeneral}>
                   {task.map((task, index) => (
-                    <TouchableOpacity key={index} onPress={() => editTask(index)}>
+                    <TouchableOpacity  key={index} onPress={() => {
+                      editTask(index);
+                      
+                    }}>
                       <View style={styles.rectangulo}>
                         <Text>{task}</Text>
                         <TouchableOpacity onPress={() => deleteTask(index)}>
@@ -171,7 +221,7 @@ export default function App() {
                 />
               </View>
             </TouchableOpacity>
-            <TouchableOpacity onPress={handleAddTask}>
+            <TouchableOpacity onPress={toggleModal}>
             <View style={styles.Botonagregar}>
               <AntDesign name="pluscircleo" size={35} color="black" />
             </View>
