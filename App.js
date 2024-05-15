@@ -19,7 +19,7 @@ import {
 } from "@expo/vector-icons";
 
 export default function App() {
-  const [user, setUser] = useState(false);
+  const [user, setUser] = useState(true);
   //membresias...
   const [task, setTask] = useState([]);
   const [newTask, setNewTask] = useState("");
@@ -140,10 +140,6 @@ const editTask = (index) => {
               />
             </View>
                {/*Aquí trabaja tavo*/}
-
-
-
-
                <Modal visible={isModalVisible} animationType="slide">
         <View style={styles.modalContainer}>
           <Text style={styles.modalTitle}>Crea una nueva membresia</Text>
@@ -170,7 +166,7 @@ const editTask = (index) => {
             <Text style={styles.closeButtonText}>Cerrar</Text>
           </TouchableOpacity>
           {showSuccessMessage && (
-    <Text style={styles.menugeneral}>Guardado Con Éxito!!!!</Text>
+    <Text style={styles.menugeneral}>Guardado Con Éxito</Text>
   )}
         </View>
       </Modal>
