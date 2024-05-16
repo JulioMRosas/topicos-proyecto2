@@ -8,7 +8,8 @@ import {
   Image,
   TouchableOpacity,
   ScrollView,
-  ImageBackground, Modal
+  ImageBackground,
+  Modal,
 } from "react-native";
 import SignIn from "./components/SignIn";
 import {
@@ -20,71 +21,69 @@ import {
 
 export default function App() {
   const [user, setUser] = useState(true);
-  //membresias...
+  // Membresías...
   const [task, setTask] = useState([]);
-  const [newTask, setNewTask] = useState("");
-  const [editedTaskText, setEditedTaskText] = useState("");
+  const [newTask, setNewTask] = useState({ title: "", monto: "" });
+  const [editedTask, setEditedTask] = useState({ title: "", monto: "" });
   const [isEditing, setIsEditing] = useState(false);
   const [editIndex, setEditIndex] = useState(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
-  
+
   const [chat, setChat] = useState(false);
-  const [chatText, setChatText] = useState("Escribe aqui lo que necesitas");
+  const [chatText, setChatText] = useState("Escribe aquí lo que necesitas");
   const signOut = () => {
     setUser(false);
   };
 
-  //actualizar la lista existente de membresias con una nueva
+  // Actualizar la lista existente de membresías con una nueva
   const addTask = (newTask) => {
     setTask([...task, newTask]);
   };
   const toggleModal = () => {
     setIsModalVisible(!isModalVisible);
   };
-  //editar
-  //editar
-const editTask = (index) => {
-  setEditedTaskText(task[index]);
-  setIsEditing(true); // Asegurar que isEditing se establezca en true al editar una tarea existente
-  setEditIndex(index);
-  setIsModalVisible(true); // Abre el modal al editar una membresía existente
-};
 
-  
-  //eliminar
+  // Editar
+  const editTask = (index) => {
+    setEditedTask(task[index]);
+    setIsEditing(true); // Asegurar que isEditing se establezca en true al editar una tarea existente
+    setEditIndex(index);
+    setIsModalVisible(true); // Abre el modal al editar una membresía existente
+  };
+
+  // Eliminar
   const deleteTask = (index) => {
     const updatedTask = [...task];
     updatedTask.splice(index, 1);
     setTask(updatedTask);
   };
 
-  //funcion de agregar la nueva membresia a la lista
+  // Función de agregar la nueva membresía a la lista
   const handleAddTask = () => {
-  
-      if (newTask.trim() !== "") {
-        addTask(newTask);
-        setNewTask("");
-        setIsModalVisible(false); // Cierra el modal después de agregar nueva membresia exitosamente
-      }
-    
+    if (newTask.title.trim() !== "" && !isNaN(parseFloat(newTask.monto))) {
+      addTask(newTask);
+      setNewTask({ title: "", monto: "" });
+      setIsModalVisible(false); // Cierra el modal después de agregar nueva membresía exitosamente
+    }
   };
 
-
-  //guardar nuevos datos despues de editar membresia existente
+  // Guardar nuevos datos después de editar membresía existente
   const saveEditedTask = () => {
-      if (editedTaskText.trim() !== "") {
-        const updatedTask = [...task];
-        updatedTask[editIndex] = editedTaskText;
-        setTask(updatedTask);
-        setIsEditing(false);
-        setEditedTaskText("");
-        setEditIndex(null);
-        if (!isEditing) {
-          setShowSuccessMessage(true); // Mostrar el mensaje de éxito en el modal
-        }
+    if (
+      editedTask.title.trim() !== "" &&
+      !isNaN(parseFloat(editedTask.monto))
+    ) {
+      const updatedTask = [...task];
+      updatedTask[editIndex] = editedTask;
+      setTask(updatedTask);
+      setIsEditing(false);
+      setEditedTask({ title: "", monto: "" });
+      setEditIndex(null);
+      if (!isEditing) {
+        setShowSuccessMessage(true); // Mostrar el mensaje de éxito en el modal
       }
-    
+    }
   };
 
   const useChat = () => {
@@ -107,7 +106,7 @@ const editTask = (index) => {
             </TouchableOpacity>
           </View>
           <View style={styles.chatMainArea}>
-            <Text>conversacion</Text>
+            <Text>Conversación</Text>
           </View>
           <View style={styles.chatTypingArea}>
             <TextInput
@@ -121,7 +120,7 @@ const editTask = (index) => {
           </View>
         </SafeAreaView>
       ) : user ? (
-        /* Membresias */
+        /* Membresías */
         <SafeAreaView style={styles.container}>
           <ImageBackground
             source={require("./assets/Sandiafondo.png")}
@@ -139,53 +138,66 @@ const editTask = (index) => {
                 source={require("./assets/LogoRemembership.png")}
               />
             </View>
-               {/*Aquí trabaja tavo*/}
-               <Modal visible={isModalVisible} animationType="slide">
-        <View style={styles.modalContainer}>
-          <Text style={styles.modalTitle}>Crea una nueva membresia</Text>
-          <TextInput
+
+            <Modal visible={isModalVisible} animationType="slide">
+              <View style={styles.modalContainer}>
+                <Text style={styles.modalTitle}>
+                  {isEditing ? "Editar membresía" : "Crea una nueva membresía"}
+                </Text>
+                <TextInput
                   style={styles.input}
-                  placeholder="Presiona para crear una nueva membresia"
-                  value={newTask}
-                  onChangeText={(text) => setNewTask(text)}
+                  placeholder="Presiona para poner un titulo"
+                  value={isEditing ? editedTask.title : newTask.title}
+                  onChangeText={(text) =>
+                    isEditing
+                      ? setEditedTask({ ...editedTask, title: text })
+                      : setNewTask({ ...newTask, title: text })
+                  }
                 />
                 <TextInput
                   style={styles.input}
-                  placeholder="Presiona para editar membreasia"
-                  value={editedTaskText}
-                  onChangeText={(text) => setEditedTaskText(text)}
+                  placeholder="Presiona para poner el precio"
+                  value={isEditing ? editedTask.monto : newTask.monto}
+                  keyboardType="numeric"
+                  onChangeText={(text) =>
+                    isEditing
+                      ? setEditedTask({ ...editedTask, monto: text })
+                      : setNewTask({ ...newTask, monto: text })
+                  }
                 />
-      
-          <TouchableOpacity style={styles.AddButton} onPress={handleAddTask}>
-            <Text style={styles.registerButtonText}>Agregar</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={saveEditedTask}>
-                  <Text>Guardar cambios</Text>
+                <TouchableOpacity
+                  style={styles.AddButton}
+                  onPress={isEditing ? saveEditedTask : handleAddTask}
+                >
+                  <Text style={styles.registerButtonText}>
+                    {isEditing ? "Guardar cambios" : "Agregar"}
+                  </Text>
                 </TouchableOpacity>
-          <TouchableOpacity style={styles.closeButton} onPress={toggleModal}>
-            <Text style={styles.closeButtonText}>Cerrar</Text>
-          </TouchableOpacity>
-          {showSuccessMessage && (
-    <Text style={styles.menugeneral}>Guardado Con Éxito</Text>
-  )}
-        </View>
-      </Modal>
+                <TouchableOpacity
+                  style={styles.closeButton}
+                  onPress={toggleModal}
+                >
+                  <Text style={styles.closeButtonText}>Cerrar</Text>
+                </TouchableOpacity>
+                {showSuccessMessage && (
+                  <Text style={styles.menugeneral}>Guardado Con Éxito</Text>
+                )}
+              </View>
+            </Modal>
 
-
-
-      
             <ScrollView style={styles.scrollView}>
               <View style={styles.menugeneral}>
-                
-                
                 <View style={styles.menugeneral}>
                   {task.map((task, index) => (
-                    <TouchableOpacity  key={index} onPress={() => {
-                      editTask(index);
-                      
-                    }}>
+                    <TouchableOpacity
+                      key={index}
+                      onPress={() => {
+                        editTask(index);
+                      }}
+                    >
                       <View style={styles.rectangulo}>
-                        <Text>{task}</Text>
+                        <Text>{task.title}</Text>
+                        <Text>{task.monto}</Text>
                         <TouchableOpacity onPress={() => deleteTask(index)}>
                           <Entypo name="cross" size={24} color="black" />
                         </TouchableOpacity>
@@ -218,11 +230,10 @@ const editTask = (index) => {
               </View>
             </TouchableOpacity>
             <TouchableOpacity onPress={toggleModal}>
-            <View style={styles.Botonagregar}>
-              <AntDesign name="pluscircleo" size={35} color="black" />
-            </View>
+              <View style={styles.Botonagregar}>
+                <AntDesign name="pluscircleo" size={35} color="black" />
+              </View>
             </TouchableOpacity>
-            
           </View>
         </SafeAreaView>
       ) : (
@@ -372,4 +383,5 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
+
 });
