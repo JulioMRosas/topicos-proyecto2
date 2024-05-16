@@ -175,6 +175,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   container: {
+    height: "100%",
     width: "100%",
     backgroundColor: "#fff",
     alignItems: "center",

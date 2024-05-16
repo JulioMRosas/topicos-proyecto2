@@ -145,7 +145,7 @@ export default function App() {
                   {isEditing ? "Editar membresía" : "Crea una nueva membresía"}
                 </Text>
                 <TextInput
-                  style={styles.input}
+                  style={styles.modalInputTitulo}
                   placeholder="Presiona para poner un titulo"
                   value={isEditing ? editedTask.title : newTask.title}
                   onChangeText={(text) =>
@@ -155,7 +155,7 @@ export default function App() {
                   }
                 />
                 <TextInput
-                  style={styles.input}
+                  style={styles.modalInputPrecio}
                   placeholder="Presiona para poner el precio"
                   value={isEditing ? editedTask.monto : newTask.monto}
                   keyboardType="numeric"
@@ -166,25 +166,25 @@ export default function App() {
                   }
                 />
                 <TouchableOpacity
-                  style={styles.AddButton}
+                  style={styles.modalAgregarBoton}
                   onPress={isEditing ? saveEditedTask : handleAddTask}
                 >
-                  <Text style={styles.registerButtonText}>
+                  <Text style={styles.modalRegisterButtonText}>
                     {isEditing ? "Guardar cambios" : "Agregar"}
                   </Text>
                 </TouchableOpacity>
                 <TouchableOpacity
-                  style={styles.closeButton}
+                  style={styles.modalCerrarBoton}
                   onPress={toggleModal}
                 >
-                  <Text style={styles.closeButtonText}>Cerrar</Text>
+                  <Text style={styles.modalTextoCerrar}>Cerrar</Text>
                 </TouchableOpacity>
                 {showSuccessMessage && (
                   <Text style={styles.menugeneral}>Guardado Con Éxito</Text>
                 )}
               </View>
             </Modal>
-
+                {/* Termina el modal */}
             <ScrollView style={styles.scrollView}>
               <View style={styles.menugeneral}>
                 <View style={styles.menugeneral}>
@@ -384,4 +384,78 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
 
+  // modal //
+  modalContainer: {
+    backgroundColor: "#d83c3c",
+    borderWidth: 7,
+    borderColor: "#bc2626",
+    borderStyle: "solid",
+    height: "100%",
+    width: "100%",
+    alignItems: "center",
+  },
+
+  modalTitle:{
+    fontSize: 24, // Cambia este valor para ajustar el tamaño del texto
+    color: "#FFFFFF", // Puedes usar cualquier código de color hexadecimal aquí
+    fontWeight: "bold",
+    marginBottom: 20,
+  },
+
+  modalInputTitulo: {
+    color: "#000000",
+    fontSize: 16,
+    textAlign: "center",
+    fontWeight: "bold",
+    backgroundColor: "white",
+    borderRadius: 7,
+    marginBottom: 9,
+    width:"80%"
+  },
+
+  modalInputPrecio: {
+    color: "#000000",
+    fontSize: 16,
+    textAlign: "center",
+    fontWeight: "bold",
+    backgroundColor: "white",
+    borderRadius: 7,
+    marginBottom: 9,
+    width:"80%"
+  },
+
+  modalAgregarBoton:{
+    width: "50%",
+    backgroundColor: "#a1c398",
+    borderRadius: 12,
+    padding: 15,
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 30,
+  },
+
+  modalCerrarBoton:{
+    width: "50%",
+    backgroundColor: "#a1c398",
+    borderRadius: 12,
+    padding: 15,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 30,
+  },
+
+  modalTextoCerrar:{
+    color: "#000000",
+    fontSize: 16,
+    textAlign: "center",
+    fontWeight: "bold",
+  },
+
+  modalRegisterButtonText:{
+    color: "#000000",
+    fontSize: 16,
+    textAlign: "center",
+    fontWeight: "bold",
+  },
 });
