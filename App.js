@@ -190,15 +190,18 @@ export default function App() {
                 <View style={styles.menugeneral}>
                   {task.map((task, index) => (
                     <TouchableOpacity
+                      style={styles.contenedorMembresia}
                       key={index}
                       onPress={() => {
                         editTask(index);
                       }}
                     >
-                      <View style={styles.rectangulo}>
-                        <Text>{task.title}</Text>
-                        <Text>{task.monto}</Text>
-                        <TouchableOpacity onPress={() => deleteTask(index)}>
+                      <View style={styles.estructuraMembresia}>
+                        <Text>Membresia: {task.title}</Text>
+                        <Text>Monto: {task.monto}</Text>
+                      </View>
+                      <View style={styles.estructuraMembresiaX}>
+                        <TouchableOpacity style={styles.botonX} onPress={() => deleteTask(index)}>
                           <Entypo name="cross" size={24} color="black" />
                         </TouchableOpacity>
                       </View>
@@ -281,16 +284,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
 
-  rectangulo: {
-    width: "90%",
-    height: 100,
-    marginBottom: 8,
-    borderRadius: 25,
-    backgroundColor: "#fefded",
-    alignItems: "flex-end",
-    justifyContent: "center",
-    display: "flex",
-  },
+  
 
   tinyLogo: {
     width: 70,
@@ -458,4 +452,24 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontWeight: "bold",
   },
+  // modal termina //
+  // contenedor de membresía //
+  contenedorMembresia: {
+    width: "90%",
+    height: 100,
+    marginBottom: 8,
+    borderRadius: 25,
+    backgroundColor: "#fefded",
+    justifyContent: "center",
+    display: "flex",
+    padding: 20,
+  },
+  estructuraMembresiaX:{
+    display: "flex",
+    alignItems: "flex-end",
+  },
+  botonX:{
+    backgroundColor: "#8dd68c",
+    borderRadius: 100,
+  }
 });
