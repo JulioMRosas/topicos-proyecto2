@@ -23,8 +23,8 @@ export default function App() {
   const [user, setUser] = useState(true);
   // Membresías...
   const [task, setTask] = useState([]);
-  const [newTask, setNewTask] = useState({ title: "", monto: "" });
-  const [editedTask, setEditedTask] = useState({ title: "", monto: "" });
+  const [newTask, setNewTask] = useState({ title: "", monto: "", creacionFecha: "", expiracionFecha: ""});
+  const [editedTask, setEditedTask] = useState({ title: "", monto: "", creacionFecha: "", expiracionFecha: "" });
   const [isEditing, setIsEditing] = useState(false);
   const [editIndex, setEditIndex] = useState(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -62,8 +62,10 @@ export default function App() {
   // Función de agregar la nueva membresía a la lista
   const handleAddTask = () => {
     if (newTask.title.trim() !== "" && !isNaN(parseFloat(newTask.monto))) {
-      addTask(newTask);
-      setNewTask({ title: "", monto: "" });
+      const currentDateTime = new Date().toLocaleString();
+      const updatedNewTask = { ...newTask, creacionFecha: currentDateTime };
+      addTask(updatedNewTask);
+      setNewTask({ title: "", monto: "" , creacionFecha: "", expiracionFecha: ""});
       setIsModalVisible(false); // Cierra el modal después de agregar nueva membresía exitosamente
     }
   };
@@ -78,7 +80,7 @@ export default function App() {
       updatedTask[editIndex] = editedTask;
       setTask(updatedTask);
       setIsEditing(false);
-      setEditedTask({ title: "", monto: "" });
+      setEditedTask({ title: "", monto: "", creacionFecha: "", expiracionFecha: "" });
       setEditIndex(null);
       if (!isEditing) {
         setShowSuccessMessage(true); // Mostrar el mensaje de éxito en el modal
@@ -165,6 +167,16 @@ export default function App() {
                       : setNewTask({ ...newTask, monto: text })
                   }
                 />
+                <TextInput
+                  style={styles.modalInputFecha}
+                  placeholder="Fecha de vencimiento (DD/MM/YYYY)"
+                  value={isEditing ? editedTask.expiracionFecha : newTask.expiracionFecha}
+                  onChangeText={(text) =>
+                    isEditing
+                      ? setEditedTask({ ...editedTask, expiracionFecha: text })
+                      : setNewTask({ ...newTask, expiracionFecha: text })
+                  }
+                />
                 <TouchableOpacity
                   style={styles.modalAgregarBoton}
                   onPress={isEditing ? saveEditedTask : handleAddTask}
@@ -199,6 +211,8 @@ export default function App() {
                       <View style={styles.estructuraMembresia}>
                         <Text>Membresia: {task.title}</Text>
                         <Text>Monto: {task.monto}</Text>
+                        <Text>Fecha de creación: {task.creacionFecha}</Text>
+                        <Text>Fecha de vencimiento: {task.expiracionFecha}</Text>
                       </View>
                       <View style={styles.estructuraMembresiaX}>
                         <TouchableOpacity style={styles.botonX} onPress={() => deleteTask(index)}>
