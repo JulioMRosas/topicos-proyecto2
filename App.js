@@ -202,12 +202,13 @@ export default function App() {
                 />
                 <TextInput
                   style={styles.modalInputFecha}
-                  placeholder="Fecha de vencimiento (DD/MM/YYYY)"
+                  placeholder="Vencimiento (DD/MM/YYYY)"
                   value={
                     isEditing
                       ? editedTask.expiracionFecha
                       : newTask.expiracionFecha
                   }
+                  keyboardType="numeric"
                   onChangeText={(text) =>
                     isEditing
                       ? setEditedTask({ ...editedTask, expiracionFecha: text })
@@ -263,20 +264,22 @@ export default function App() {
                         </TouchableOpacity>
                       </View>
                       {deleteMembership && (
-                        <>
+                        <View style={styles.contenedorBotonesBC}>
+
                           <TouchableOpacity
                             style={styles.confirmDeleteCancelar}
                             onPress={cancelDelete}
                           >
                             <Text style={styles.cancelarText}>Cancelar</Text>
                           </TouchableOpacity>
+ 
                           <TouchableOpacity
                             style={styles.confirmDeleteBorrar}
                             onPress={() => deleteTask(index)}
                           >
                             <Text style={styles.borrarText}>Borrar</Text>
                           </TouchableOpacity>
-                        </>
+                        </View>
                       )}
                     </TouchableOpacity>
                   ))}
@@ -523,11 +526,37 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontWeight: "bold",
   },
+  modalInputFecha:{
+    color: "#000000",
+    fontSize: 16,
+    textAlign: "center",
+    fontWeight: "bold",
+    backgroundColor: "white",
+    borderRadius: 7,
+    marginBottom: 9,
+    width: "80%",
+  },
+  borrarText:{
+    color: "red",
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+
+  cancelarText:{
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+
+  contenedorBotonesBC:{
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-evenly"
+  },
   // modal termina //
   // contenedor de membresía //
   contenedorMembresia: {
     width: "90%",
-    height: 100,
+    height: 145,
     marginBottom: 8,
     borderRadius: 25,
     backgroundColor: "#fefded",
