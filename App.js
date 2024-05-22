@@ -23,13 +23,27 @@ export default function App() {
   const [user, setUser] = useState(true);
   // Membresías...
   const [task, setTask] = useState([]);
-  const [newTask, setNewTask] = useState({ title: "", monto: "", creacionFecha: "", expiracionFecha: ""});
-  const [editedTask, setEditedTask] = useState({ title: "", monto: "", creacionFecha: "", expiracionFecha: "" });
+  const [newTask, setNewTask] = useState({
+    title: "",
+    monto: "",
+    creacionFecha: "",
+    expiracionFecha: "",
+  });
+  const [editedTask, setEditedTask] = useState({
+    title: "",
+    monto: "",
+    creacionFecha: "",
+    expiracionFecha: "",
+  });
   const [isEditing, setIsEditing] = useState(false);
   const [editIndex, setEditIndex] = useState(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
 
+  /* Confirmar si se borrara una membresia */
+  const [deleteMembership, setDeleteMembership] = useState(false);
+
+  /* Estados del chat */
   const [chat, setChat] = useState(false);
   const [chatText, setChatText] = useState("Escribe aquí lo que necesitas");
   const signOut = () => {
@@ -57,6 +71,7 @@ export default function App() {
     const updatedTask = [...task];
     updatedTask.splice(index, 1);
     setTask(updatedTask);
+    setDeleteMembership(false);
   };
 
   // Función de agregar la nueva membresía a la lista
@@ -65,7 +80,12 @@ export default function App() {
       const currentDateTime = new Date().toLocaleString();
       const updatedNewTask = { ...newTask, creacionFecha: currentDateTime };
       addTask(updatedNewTask);
-      setNewTask({ title: "", monto: "" , creacionFecha: "", expiracionFecha: ""});
+      setNewTask({
+        title: "",
+        monto: "",
+        creacionFecha: "",
+        expiracionFecha: "",
+      });
       setIsModalVisible(false); // Cierra el modal después de agregar nueva membresía exitosamente
     }
   };
@@ -80,7 +100,12 @@ export default function App() {
       updatedTask[editIndex] = editedTask;
       setTask(updatedTask);
       setIsEditing(false);
-      setEditedTask({ title: "", monto: "", creacionFecha: "", expiracionFecha: "" });
+      setEditedTask({
+        title: "",
+        monto: "",
+        creacionFecha: "",
+        expiracionFecha: "",
+      });
       setEditIndex(null);
       if (!isEditing) {
         setShowSuccessMessage(true); // Mostrar el mensaje de éxito en el modal
@@ -94,6 +119,14 @@ export default function App() {
 
   const closeChat = () => {
     setChat(false);
+  };
+
+  const confirmDelete = () => {
+    setDeleteMembership(true);
+  };
+
+  const cancelDelete = () => {
+    setDeleteMembership(false);
   };
 
   return (
@@ -170,7 +203,11 @@ export default function App() {
                 <TextInput
                   style={styles.modalInputFecha}
                   placeholder="Fecha de vencimiento (DD/MM/YYYY)"
-                  value={isEditing ? editedTask.expiracionFecha : newTask.expiracionFecha}
+                  value={
+                    isEditing
+                      ? editedTask.expiracionFecha
+                      : newTask.expiracionFecha
+                  }
                   onChangeText={(text) =>
                     isEditing
                       ? setEditedTask({ ...editedTask, expiracionFecha: text })
@@ -196,7 +233,8 @@ export default function App() {
                 )}
               </View>
             </Modal>
-                {/* Termina el modal */}
+
+            {/* Termina el modal */}
             <ScrollView style={styles.scrollView}>
               <View style={styles.menugeneral}>
                 <View style={styles.menugeneral}>
@@ -212,13 +250,34 @@ export default function App() {
                         <Text>Membresia: {task.title}</Text>
                         <Text>Monto: {task.monto}</Text>
                         <Text>Fecha de creación: {task.creacionFecha}</Text>
-                        <Text>Fecha de vencimiento: {task.expiracionFecha}</Text>
+                        <Text>
+                          Fecha de vencimiento: {task.expiracionFecha}
+                        </Text>
                       </View>
                       <View style={styles.estructuraMembresiaX}>
-                        <TouchableOpacity style={styles.botonX} onPress={() => deleteTask(index)}>
+                        <TouchableOpacity
+                          style={styles.botonX}
+                          onPress={confirmDelete}
+                        >
                           <Entypo name="cross" size={24} color="black" />
                         </TouchableOpacity>
                       </View>
+                      {deleteMembership && (
+                        <>
+                          <TouchableOpacity
+                            style={styles.confirmDeleteCancelar}
+                            onPress={cancelDelete}
+                          >
+                            <Text style={styles.cancelarText}>Cancelar</Text>
+                          </TouchableOpacity>
+                          <TouchableOpacity
+                            style={styles.confirmDeleteBorrar}
+                            onPress={() => deleteTask(index)}
+                          >
+                            <Text style={styles.borrarText}>Borrar</Text>
+                          </TouchableOpacity>
+                        </>
+                      )}
                     </TouchableOpacity>
                   ))}
                 </View>
@@ -297,8 +356,6 @@ const styles = StyleSheet.create({
     color: "#FFFFFF", // Puedes usar cualquier código de color hexadecimal aquí
     fontWeight: "bold",
   },
-
-  
 
   tinyLogo: {
     width: 70,
@@ -403,7 +460,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
 
-  modalTitle:{
+  modalTitle: {
     fontSize: 24, // Cambia este valor para ajustar el tamaño del texto
     color: "#FFFFFF", // Puedes usar cualquier código de color hexadecimal aquí
     fontWeight: "bold",
@@ -418,7 +475,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     borderRadius: 7,
     marginBottom: 9,
-    width:"80%"
+    width: "80%",
   },
 
   modalInputPrecio: {
@@ -429,10 +486,10 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     borderRadius: 7,
     marginBottom: 9,
-    width:"80%"
+    width: "80%",
   },
 
-  modalAgregarBoton:{
+  modalAgregarBoton: {
     width: "50%",
     backgroundColor: "#a1c398",
     borderRadius: 12,
@@ -442,7 +499,7 @@ const styles = StyleSheet.create({
     marginTop: 30,
   },
 
-  modalCerrarBoton:{
+  modalCerrarBoton: {
     width: "50%",
     backgroundColor: "#a1c398",
     borderRadius: 12,
@@ -453,14 +510,14 @@ const styles = StyleSheet.create({
     marginTop: 30,
   },
 
-  modalTextoCerrar:{
+  modalTextoCerrar: {
     color: "#000000",
     fontSize: 16,
     textAlign: "center",
     fontWeight: "bold",
   },
 
-  modalRegisterButtonText:{
+  modalRegisterButtonText: {
     color: "#000000",
     fontSize: 16,
     textAlign: "center",
@@ -478,12 +535,12 @@ const styles = StyleSheet.create({
     display: "flex",
     padding: 20,
   },
-  estructuraMembresiaX:{
+  estructuraMembresiaX: {
     display: "flex",
     alignItems: "flex-end",
   },
-  botonX:{
+  botonX: {
     backgroundColor: "#8dd68c",
     borderRadius: 100,
-  }
+  },
 });
