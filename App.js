@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { db } from "./utils/firebase";
 import {
   SafeAreaView,
   StyleSheet,
@@ -18,9 +19,12 @@ import {
   AntDesign,
   SimpleLineIcons,
 } from "@expo/vector-icons";
+import { getFirestore, collection, addDoc, query, where, onSnapshot, doc, updateDoc, deleteDoc } from "firebase/firestore";
+import { getAuth } from "firebase/auth";
+
 
 export default function App() {
-  const [user, setUser] = useState(true);
+  const [user, setUser] = useState(null);
   // Membresías...
   const [task, setTask] = useState([]);
   const [newTask, setNewTask] = useState({
@@ -39,6 +43,8 @@ export default function App() {
   const [editIndex, setEditIndex] = useState(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+
+  
 
   /* Confirmar si se borrara una membresia */
   const [deleteMembership, setDeleteMembership] = useState(false);
@@ -67,52 +73,92 @@ export default function App() {
   };
 
   // Eliminar
-  const deleteTask = (index) => {
-    const updatedTask = [...task];
-    updatedTask.splice(index, 1);
-    setTask(updatedTask);
-    setDeleteMembership(false);
-  };
-
-  // Función de agregar la nueva membresía a la lista
-  const handleAddTask = () => {
-    if (newTask.title.trim() !== "" && !isNaN(parseFloat(newTask.monto))) {
-      const currentDateTime = new Date().toLocaleString();
-      const updatedNewTask = { ...newTask, creacionFecha: currentDateTime };
-      addTask(updatedNewTask);
-      setNewTask({
-        title: "",
-        monto: "",
-        creacionFecha: "",
-        expiracionFecha: "",
-      });
-      setIsModalVisible(false); // Cierra el modal después de agregar nueva membresía exitosamente
+  const deleteTask = async (index) => {
+    try {
+      const db = getFirestore();
+      const taskDocRef = doc(db, "membresias", task[index].id);
+      await deleteDoc(taskDocRef);
+      setDeleteMembership(false);
+    } catch (error) {
+      console.error("Error al eliminar membresía: ", error);
     }
   };
 
-  // Guardar nuevos datos después de editar membresía existente
-  const saveEditedTask = () => {
-    if (
-      editedTask.title.trim() !== "" &&
-      !isNaN(parseFloat(editedTask.monto))
-    ) {
-      const updatedTask = [...task];
-      updatedTask[editIndex] = editedTask;
-      setTask(updatedTask);
-      setIsEditing(false);
-      setEditedTask({
-        title: "",
-        monto: "",
-        creacionFecha: "",
-        expiracionFecha: "",
-      });
-      setEditIndex(null);
-      if (!isEditing) {
-        setShowSuccessMessage(true); // Mostrar el mensaje de éxito en el modal
+  useEffect(() => {
+    const fetchTasks = () => {
+      const auth = getAuth();
+      const user = auth.currentUser;
+      if (user) {
+        const db = getFirestore();
+        const q = query(collection(db, "membresias"), where("userId", "==", user.uid));
+        const unsubscribe = onSnapshot(q, (snapshot) => {
+          const tasks = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+          setTask(tasks);
+        });
+        return unsubscribe; // Clean up subscription on unmount
+      }
+    };
+  
+    const unsubscribe = fetchTasks();
+    return () => {
+      if (unsubscribe) unsubscribe();
+    };
+  }, [user]);
+
+  // Función de agregar la nueva membresía a la lista
+  const handleAddTask = async () => {
+    if (newTask.title.trim() !== '' && !isNaN(parseFloat(newTask.monto))) {
+      const currentDateTime = new Date().toLocaleString();
+      const updatedNewTask = { ...newTask, creacionFecha: currentDateTime };
+
+      try {
+        const auth = getAuth();
+        const user = auth.currentUser;
+        if (user) {
+          const db = getFirestore(App);
+          await addDoc(collection(db, 'membresias'), {
+            ...updatedNewTask,
+            userId: user.uid,
+          });
+          console.log('Membresía agregada exitosamente');
+          setNewTask({
+            title: '',
+            monto: '',
+            creacionFecha: '',
+            expiracionFecha: '',
+          });
+          setIsModalVisible(false);
+        } else {
+          console.error('No user is currently signed in');
+        }
+      } catch (error) {
+        console.error('Error al agregar membresía: ', error);
       }
     }
   };
 
+
+  // Guardar nuevos datos después de editar membresía existente
+  const saveEditedTask = async () => {
+    if (editedTask.title.trim() !== "" && !isNaN(parseFloat(editedTask.monto))) {
+      try {
+        const db = getFirestore();
+        const taskDocRef = doc(db, "membresias", editedTask.id);
+        await updateDoc(taskDocRef, editedTask);
+        setIsEditing(false);
+        setEditedTask({
+          title: "",
+          monto: "",
+          creacionFecha: "",
+          expiracionFecha: "",
+        });
+        setEditIndex(null);
+        setShowSuccessMessage(true); // Mostrar el mensaje de éxito en el modal
+      } catch (error) {
+        console.error("Error al guardar cambios: ", error);
+      }
+    }
+  };
   const useChat = () => {
     setChat(true);
   };
@@ -229,9 +275,7 @@ export default function App() {
                 >
                   <Text style={styles.modalTextoCerrar}>Cerrar</Text>
                 </TouchableOpacity>
-                {showSuccessMessage && (
-                  <Text style={styles.menugeneral}>Guardado Con Éxito</Text>
-                )}
+                
               </View>
             </Modal>
 
