@@ -9,11 +9,9 @@ import { getFirestore } from "firebase/firestore";
 
 // https://firebase.google.com/docs/web/setup#available-libraries
 
-
 // Your web app's Firebase configuration
 
 const firebaseConfig = {
-
   apiKey: "AIzaSyA0Pr5kjwxBJibmmWnTSq3AfomeZncQbB0",
 
   authDomain: "remembership-af366.firebaseapp.com",
@@ -24,17 +22,15 @@ const firebaseConfig = {
 
   messagingSenderId: "529353936405",
 
-  appId: "1:529353936405:web:9417a8c29001faa89c881c"
-
+  appId: "1:529353936405:web:9417a8c29001faa89c881c",
 };
-
 
 // Initialize Firebase
 
 const app = initializeApp(firebaseConfig);
-const auth = initializeAuth(app/*, {
-  persistence: getReactNativePersistence(ReactNativeAsyncStorage)
-}*/)
+const auth = initializeAuth(app, {
+  persistence: getReactNativePersistence(ReactNativeAsyncStorage),
+});
 const db = getFirestore(app);
 
 export { app, auth, db };

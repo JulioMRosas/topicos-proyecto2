@@ -19,11 +19,24 @@ import {
   AntDesign,
   SimpleLineIcons,
 } from "@expo/vector-icons";
-import { getFirestore, collection, addDoc, query, where, onSnapshot, doc, updateDoc, deleteDoc } from "firebase/firestore";
+import {
+  getFirestore,
+  collection,
+  addDoc,
+  query,
+  where,
+  onSnapshot,
+  doc,
+  updateDoc,
+  deleteDoc,
+} from "firebase/firestore";
 import { getAuth } from "firebase/auth";
-
+import registerNNPushToken from "native-notify";
+import axios from "axios";
+import { handleNotifications } from "./helpers/handleNotifications";
 
 export default function App() {
+  registerNNPushToken(21557, "78MYwmeZ0dWuMHfDobD7oM");
   const [user, setUser] = useState(null);
   // Membresías...
   const [task, setTask] = useState([]);
@@ -43,8 +56,6 @@ export default function App() {
   const [editIndex, setEditIndex] = useState(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
-
-  
 
   /* Confirmar si se borrara una membresia */
   const [deleteMembership, setDeleteMembership] = useState(false);
@@ -90,15 +101,22 @@ export default function App() {
       const user = auth.currentUser;
       if (user) {
         const db = getFirestore();
-        const q = query(collection(db, "membresias"), where("userId", "==", user.uid));
+        const q = query(
+          collection(db, "membresias"),
+          where("userId", "==", user.uid)
+        );
         const unsubscribe = onSnapshot(q, (snapshot) => {
-          const tasks = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+          const tasks = snapshot.docs.map((doc) => {
+            const docData = doc.data();
+            const updatedData = handleNotifications(docData, user.uid);
+            return updatedData;
+          });
           setTask(tasks);
         });
         return unsubscribe; // Clean up subscription on unmount
       }
     };
-  
+
     const unsubscribe = fetchTasks();
     return () => {
       if (unsubscribe) unsubscribe();
@@ -107,7 +125,7 @@ export default function App() {
 
   // Función de agregar la nueva membresía a la lista
   const handleAddTask = async () => {
-    if (newTask.title.trim() !== '' && !isNaN(parseFloat(newTask.monto))) {
+    if (newTask.title.trim() !== "" && !isNaN(parseFloat(newTask.monto))) {
       const currentDateTime = new Date().toLocaleString();
       const updatedNewTask = { ...newTask, creacionFecha: currentDateTime };
 
@@ -116,31 +134,33 @@ export default function App() {
         const user = auth.currentUser;
         if (user) {
           const db = getFirestore(App);
-          await addDoc(collection(db, 'membresias'), {
+          await addDoc(collection(db, "membresias"), {
             ...updatedNewTask,
             userId: user.uid,
           });
-          console.log('Membresía agregada exitosamente');
+          console.log("Membresía agregada exitosamente");
           setNewTask({
-            title: '',
-            monto: '',
-            creacionFecha: '',
-            expiracionFecha: '',
+            title: "",
+            monto: "",
+            creacionFecha: "",
+            expiracionFecha: "",
           });
           setIsModalVisible(false);
         } else {
-          console.error('No user is currently signed in');
+          console.error("No user is currently signed in");
         }
       } catch (error) {
-        console.error('Error al agregar membresía: ', error);
+        console.error("Error al agregar membresía: ", error);
       }
     }
   };
 
-
   // Guardar nuevos datos después de editar membresía existente
   const saveEditedTask = async () => {
-    if (editedTask.title.trim() !== "" && !isNaN(parseFloat(editedTask.monto))) {
+    if (
+      editedTask.title.trim() !== "" &&
+      !isNaN(parseFloat(editedTask.monto))
+    ) {
       try {
         const db = getFirestore();
         const taskDocRef = doc(db, "membresias", editedTask.id);
@@ -204,7 +224,7 @@ export default function App() {
         /* Membresías */
         <SafeAreaView style={styles.container}>
           <ImageBackground
-            source={require("./assets/Sandiafondo.png")}
+            source={require("./assets/Sandiafondo.webp")}
             style={styles.tinyFondo}
           >
             {/* Header */}
@@ -275,7 +295,6 @@ export default function App() {
                 >
                   <Text style={styles.modalTextoCerrar}>Cerrar</Text>
                 </TouchableOpacity>
-                
               </View>
             </Modal>
 
@@ -309,14 +328,13 @@ export default function App() {
                       </View>
                       {deleteMembership && (
                         <View style={styles.contenedorBotonesBC}>
-
                           <TouchableOpacity
                             style={styles.confirmDeleteCancelar}
                             onPress={cancelDelete}
                           >
                             <Text style={styles.cancelarText}>Cancelar</Text>
                           </TouchableOpacity>
- 
+
                           <TouchableOpacity
                             style={styles.confirmDeleteBorrar}
                             onPress={() => deleteTask(index)}
@@ -570,7 +588,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontWeight: "bold",
   },
-  modalInputFecha:{
+  modalInputFecha: {
     color: "#000000",
     fontSize: 16,
     textAlign: "center",
@@ -580,21 +598,21 @@ const styles = StyleSheet.create({
     marginBottom: 9,
     width: "80%",
   },
-  borrarText:{
+  borrarText: {
     color: "red",
     fontSize: 16,
     fontWeight: "bold",
   },
 
-  cancelarText:{
+  cancelarText: {
     fontSize: 16,
     fontWeight: "bold",
   },
 
-  contenedorBotonesBC:{
+  contenedorBotonesBC: {
     display: "flex",
     flexDirection: "row",
-    justifyContent: "space-evenly"
+    justifyContent: "space-evenly",
   },
   // modal termina //
   // contenedor de membresía //
