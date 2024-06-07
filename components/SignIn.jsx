@@ -15,8 +15,6 @@ import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
 } from "firebase/auth";
-import { registerIndieID, unregisterIndieDevice } from "native-notify";
-import axios from "axios";
 
 export default function Home(props) {
   const [email, setEmail] = useState("");
@@ -31,8 +29,6 @@ export default function Home(props) {
       const auth = getAuth();
       await signInWithEmailAndPassword(auth, email, password);
       // Aquí puedes navegar a otra pantalla o realizar alguna acción adicional
-      const user = auth.currentUser;
-      await registerIndieID(`${user.uid}`, 21557, "78MYwmeZ0dWuMHfDobD7oM");
       setUser(true);
     } catch (error) {
       setError(error.message);
@@ -57,7 +53,7 @@ export default function Home(props) {
   return (
     <View style={styles.container}>
       <ImageBackground
-        source={require("../assets/Sandiafondo.webp")}
+        source={require("../assets/Sandiafondo.png")}
         style={styles.tinyFondo}
       >
         <Text style={styles.welcome}>Bienvenido</Text>
